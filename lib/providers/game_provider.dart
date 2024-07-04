@@ -5,6 +5,7 @@ class GameProvider with ChangeNotifier {
   final List<CardModel> _cards = [];
   CardModel? _firstCard;
   CardModel? _secondCard;
+  bool _isWon = false;
 
   GameProvider() {
     _initCards();
@@ -43,20 +44,21 @@ class GameProvider with ChangeNotifier {
       if (_firstCard!.imgPath == _secondCard!.imgPath) {
         _firstCard!.match();
         _secondCard!.match();
-        resetCards();
+        _resetCards();
+        _checkWin();
       } else {
         await Future.delayed(const Duration(seconds: 1), () {
           _firstCard!.flip();
           _secondCard!.flip();
         });
 
-        resetCards();
+        _resetCards();
       }
     }
     notifyListeners();
   }
 
-  void resetCards() {
+  void _resetCards() {
     _firstCard = null;
     _secondCard = null;
   }
@@ -66,6 +68,15 @@ class GameProvider with ChangeNotifier {
     _cards.shuffle();
     _firstCard = null;
     _secondCard = null;
+    _isWon = false;
     notifyListeners();
+  }
+
+  void _checkWin() {
+    _isWon = _cards.every((card) => card.isMatched);
+    if (_isWon) {
+      print('You won!');
+      notifyListeners();
+    }
   }
 }
