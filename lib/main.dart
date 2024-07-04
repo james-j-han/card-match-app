@@ -1,8 +1,11 @@
 import 'package:card_match_app/pages/home_page.dart';
+import 'package:card_match_app/providers/game_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+      create: (_) => GameProvider(), child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {

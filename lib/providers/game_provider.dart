@@ -15,7 +15,7 @@ class GameProvider with ChangeNotifier {
   void _initCards() {
     final List<String> imagePaths = [
       'assets/images/ace.png',
-      'assets/images/cricle.png',
+      'assets/images/circle.png',
       'assets/images/heart.png',
       'assets/images/raindrop.png',
       'assets/images/soda.png',
@@ -30,5 +30,44 @@ class GameProvider with ChangeNotifier {
     }
 
     _cards.shuffle();
+  }
+
+  void flipCard(CardModel card) async {
+    if (_firstCard == null) {
+      _firstCard = card;
+      card.flip();
+    } else if (_secondCard == null) {
+      _secondCard = card;
+      card.flip();
+
+      if (_firstCard!.imgPath == _secondCard!.imgPath) {
+        _firstCard!.match();
+        _secondCard!.match();
+        resetCards();
+      } else {
+        print('testing');
+        await Future.delayed(const Duration(seconds: 1), () {
+          print('Flipping cards back');
+          _firstCard!.flip();
+          _secondCard!.flip();
+        });
+
+        resetCards();
+      }
+    }
+    notifyListeners();
+  }
+
+  void resetCards() {
+    _firstCard = null;
+    _secondCard = null;
+  }
+
+  void resetGame() {
+    _cards.forEach((card) => card.reset());
+    _cards.shuffle();
+    _firstCard = null;
+    _secondCard = null;
+    notifyListeners();
   }
 }
