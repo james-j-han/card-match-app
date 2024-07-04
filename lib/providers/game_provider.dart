@@ -45,9 +45,7 @@ class GameProvider with ChangeNotifier {
         _secondCard!.match();
         resetCards();
       } else {
-        print('testing');
         await Future.delayed(const Duration(seconds: 1), () {
-          print('Flipping cards back');
           _firstCard!.flip();
           _secondCard!.flip();
         });
